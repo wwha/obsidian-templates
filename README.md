@@ -23,7 +23,7 @@ Install plugins via _Community plugins_ tab.
 
 ### Setup
 
-1. Copy the templates in `template/` 
+1. Copy the templates in `templates/` 
 2. Goto _Templater_ settings, enable `Trigger Templater on new file creation`
 3. Goto _Periodic Note_ settings, change template settings to use your template files
 
