@@ -15,7 +15,9 @@ Install plugins via _Community plugins_ tab.
 
 - [Periodic Notes](https://github.com/liamcain/obsidian-periodic-notes)
 - [Templater](https://github.com/SilentVoid13/Templater)
-- [Calendar plugin](https://github.com/liamcain/obsidian-calendar-plugin) (optional)
+- [Calendar plugin](https://github.com/liamcain/obsidian-calendar-plugin)
+- [Dataview](https://github.com/blacksmithgu/obsidian-dataview)
+- [Todoist](https://github.com/jamiebrynes7/obsidian-todoist-plugin)
 
 ## How to Use
 
