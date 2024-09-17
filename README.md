@@ -5,7 +5,7 @@ Obsidian templates is a collection of custom journalling templates for Obsidian
 
 Navigate between **daily**, **weekly**, **monthly**, **quarterly**, and **yearly** notes effortlessly with [Templater](https://github.com/SilentVoid13/Templater).
 
-![Navigation example](assets/navigation%20example.gif)
+![Navigation example](assets/periodicNavigation.gif)
 
 ## Requirement
 
