@@ -1,6 +1,6 @@
 ---
 week: <% moment(tp.file.title).format("gggg-[W]WW")%>
-weekday: <% tp.date.now("dddd", 0, tp.file.title,"YYYY-MM-DD ddd")%>
+weekday: <% tp.date.now("dddd", 0, tp.file.title,"YYYY-MM-DD")%>
 aliases: 
 location:
 mood: 
