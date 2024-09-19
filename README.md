@@ -32,4 +32,4 @@ Install plugins via _Community plugins_ tab.
 3. Go to _Periodic Note_ settings, change template settings to use your template files
 4. Go to _Dataview_ settings, and switch on `Enable JavaScript queries` and `Enable inline JavaScript queries`
 
-For a more detailed guide, see blog post
+For a more detailed guide, see my [blog post](https://vaultofjosh.com/blog/obsidian-periodic-notes/)
