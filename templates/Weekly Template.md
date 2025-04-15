@@ -53,6 +53,9 @@ for (let day = 0; day < 7; day++) {
 }
 %>
 # <%moment(tp.file.title).startOf('isoWeek').format("MMM DD") %> - <%moment(tp.file.title).endOf('isoWeek').format("MMM DD") %> 
+
+![[Journal/Monthly/<%moment(tp.file.title).format("YYYY-MM")%>#Goals for this month:]]
+
 ---
 ## Goals for this week:
 1. 
