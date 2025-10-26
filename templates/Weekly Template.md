@@ -62,21 +62,6 @@ for (let day = 0; day < 7; day++) {
 2. 
 3. 
 
-## Overview
-```dataview
-table without id
-	file.link AS "Date",
-	mood + " #_/habits" AS "🌄",
-	sleep AS "🛌",
-	prayer AS "🙏",
-	choice(meditation,"✅","❌") AS "🧘‍♂️",
-	choice(exercise,"✅","❌") AS "🏃‍♂️",
-	choice(study,"✅","❌") AS "📚", 
-	choice(stretch,"✅","❌") AS "🤸"
-from "Journal/Daily"
-where week = "<% moment(tp.file.title).format("gggg-[W]ww")%>"
-sort file.name ASC
-```
 
 ## What is worth remembering about this week?
 

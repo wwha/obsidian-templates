@@ -60,3 +60,9 @@ AND file.day.year = number(substring(this.file.name, 0, 4))
 AND dateformat(date(file.name), "yyyy-MM") = replace(this.file.name, "M", "")
 SORT file.day
 ```
+
+---
+## Goals for this month:
+1. 
+2. 
+3. 

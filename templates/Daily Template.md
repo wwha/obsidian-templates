@@ -36,17 +36,6 @@ tR += '[[' + titleDate.add(1, 'days').format('YYYY-MM-DD') + ']] ❯';
 titleDate.subtract(1, 'days');
 %>
 
-```dataview
-table without id
-	mood + " #_/habits" AS "🌄",
-	prayer AS "🙏",
-	choice(meditation,"✅","❌") AS "🧘‍♂️",
-	choice(exercise,"✅","❌") AS "🏃‍♂️",
-	choice(study,"✅","❌") AS "📚",
-	choice(stretch,"✅","❌") AS "🤸"
-from "Journal/Daily"
-where file.name = "<% moment(tp.file.title).format("YYYY-MM-DD")%>"
-```
 ```dataviewjs
 // List of gratitudes
 let gratitudes = [];
@@ -82,22 +71,63 @@ let learninggreeting = learnings[Math.floor(Math.random()*learnings.length)]
 
 dv.paragraph("*Practice gratitude:* " + gratitudegreeting.message + " (" + gratitudegreeting.page.file.link + ")" + "<br>" + "*A random learning:* " + learninggreeting.message + " (" + learninggreeting.page.file.link + ")");
 ```
+Test
+```dataviewjs
+(async () => {
+	// Helper to extract "Gratitude:: ..." from file contents
+	function extractGratitudeFromContent(content) {
+		const regex = /^gratitude::\s*(.+)$/gim;
+		let results = [];
+		let match;
+		while ((match = regex.exec(content)) !== null) {
+			results.push(match[1].trim());
+		}
+		return results;
+	}
+
+	// Helper to extract "Learning:: ..." from file contents
+	function extractLearningFromContent(content) {
+		const regex = /^learning::\s*(.+)$/gim;
+		let results = [];
+		let match;
+		while ((match = regex.exec(content)) !== null) {
+			results.push(match[1].trim());
+		}
+		return results;
+	}
+
+	let gratitudes = [];
+	let learnings = [];
+	const files = app.vault.getMarkdownFiles();
+
+	for (let file of files) {
+		const content = await app.vault.read(file);
+		const page = dv.page(file.path);
+
+		// From Dataview fields
+		if (page && page.gratitude) {
+			dv.array(page.gratitude).forEach(g => gratitudes.push({ message: g, page }));
+		}
+		if (page && page.learning) {
+			dv.array(page.learning).forEach(l => learnings.push({ message: l, page }));
+		}
+
+		// From file body
+		extractGratitudeFromContent(content).forEach(g => gratitudes.push({ message: g, page }));
+		extractLearningFromContent(content).forEach(l => learnings.push({ message: l, page }));
+	}
+
+	let gratitudegreeting = gratitudes.length > 0 ? gratitudes[Math.floor(Math.random()*gratitudes.length)] : {message: "No gratitude found", page: {file: {link: ""}}};
+	let learninggreeting = learnings.length > 0 ? learnings[Math.floor(Math.random()*learnings.length)] : {message: "No learning found", page: {file: {link: ""}}};
+	dv.paragraph("*Practice gratitude:* " + gratitudegreeting.message + " (" + (gratitudegreeting.page.file?.link ?? "") + ")" + "<br>" + "*A random learning:* " + learninggreeting.message + " (" + (learninggreeting.page.file?.link ?? "") + ")");
+})();
+```
 <% tp.web.daily_quote() %>
 
 ![[Journal/Weekly/<%moment(tp.file.title).format("gggg-[W]WW")%>#Goals for this week:]]
 
 ## What am I grateful for?
 1. Gratitude:: 
-
-> [!todo]- Tasks of the day
->```todoist  
->name: '' 
->filter: "(!#Work) & due before: tomorrow"
->sorting:  
->- date  
->- priority  
->group: true  
->```
 
 ## Highlights of the day:
 1. Highlight:: 
@@ -111,48 +141,7 @@ dv.paragraph("*Practice gratitude:* " + gratitudegreeting.message + " (" + grati
 ## What excited or drained me?
 1. Exciting::
 2. Draining:: 
-```dataviewjs
-// List of kindle highlights
-let kindles = [];
 
-// Extract kindles from pages that have them
-dv.pages()
-	.where(page => page.kindle)
-	.forEach(page => {
-		dv.array(page.kindle)
-			.forEach(kindle => {
-				kindles.push({
-					message: kindle,
-					page: page
-				});
-				})});
-
-
-let kindlehighlight = kindles[Math.floor(Math.random()*kindles.length)] 
-
-dv.paragraph("*Kindle highlight:* " + kindlehighlight.message + " (" + kindlehighlight.page.file.link + ")");
-```
-```dataviewjs
-// List of podcast highlights
-let podcasts = [];
-
-// Extract kindles from pages that have them
-dv.pages()
-	.where(page => page.podcast)
-	.forEach(page => {
-		dv.array(page.podcast)
-			.forEach(podcast => {
-				podcasts.push({
-					message: podcast,
-					page: page
-				});
-				})});
-
-
-let podcasthighlight = podcasts[Math.floor(Math.random()*podcasts.length)] 
-
-dv.paragraph("*Podcast highlight:* " + podcasthighlight.message + " (" + podcasthighlight.page.file.link + ")");
-```
 #### Random notes
 ```dataviewjs
 const noOfNotes = 3
