@@ -1,5 +1,5 @@
 # obsidian-templates
-Obsidian templates is a collection of custom journalling templates for Obsidian
+Obsidian templates is a collection of custom journalling templates for Obsidian. It is forked from [obsidian-templates](https://github.com/joshuaknipe/obsidian-templates) with a few modifications.
 
 # Periodic Notes Navigation
 
@@ -17,11 +17,6 @@ Install plugins via _Community plugins_ tab.
 - [Dataview](https://github.com/blacksmithgu/obsidian-dataview)
 - [Periodic Notes](https://github.com/liamcain/obsidian-periodic-notes)
 - [Calendar](https://github.com/liamcain/obsidian-calendar-plugin)
-- [DB Folder](https://github.com/RafaelGB/obsidian-db-folder)
-- [Charts](https://charts.phib.ro/Meta/Charts/Charts+Documentation)
-- [Heatmap Calendar](https://github.com/Richardsl/heatmap-calendar-obsidian)
-- [Todoist](https://github.com/jamiebrynes7/obsidian-todoist-plugin)
-
 
 ## How to Use
 
@@ -32,4 +27,4 @@ Install plugins via _Community plugins_ tab.
 3. Go to _Periodic Note_ settings, change template settings to use your template files
 4. Go to _Dataview_ settings, and switch on `Enable JavaScript queries` and `Enable inline JavaScript queries`
 
-For a more detailed guide, see my [blog post](https://vaultofjosh.com/blog/obsidian-periodic-notes/)
+For a more detailed guide, see [blog post](https://vaultofjosh.com/blog/obsidian-periodic-notes/)
