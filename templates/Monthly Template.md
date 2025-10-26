@@ -1,4 +1,6 @@
 <%*
+tR = ""; // initialize manual output buffer
+
 await tp.file.move(`Journal/Monthly/${tp.file.title}`);
 
 let month = moment(tp.file.title);
@@ -11,58 +13,76 @@ tR += '[[' + month.format('YYYY') + ']] / ';
 tR += '[[' + month.format('YYYY-[Q]Q|[Q]Q') + ']]\n\n';
 
 // ❮ December | January | February ❯
-tR += '❮ [[' + month.subtract(1, 'months').format('YYYY-MM|MMMM') + ']]';
-tR += ' | ' + month.add(1, 'months').format('MMMM') + ' | ';
-tR += '[[' + month.add(1, 'months').format('YYYY-MM|MMMM') + ']] ❯';
-month.subtract(1, 'months');
-tR += '\n';
+tR += '❮ [[' + month.clone().subtract(1, 'months').format('YYYY-MM|MMMM') + ']]';
+tR += ' | ' + month.format('MMMM') + ' | ';
+tR += '[[' + month.clone().add(1, 'months').format('YYYY-MM|MMMM') + ']] ❯\n';
 
-// Week 52 - Week 1 - Week 2 - Week 3 - Week 4 - Week 5
+// Week links (navigation)
 const thisMonth = month.month();
-month.startOf('week');
+let weekCursor = month.clone().startOf('week');
+let weekLinks = [];
 do {
-    tR += '[[' + month.format('YYYY-[W]ww|[Week] w') + ']]';
-    month.add(1, 'weeks');
-    if (month.month() == thisMonth) {
-        tR += ' - ';
-    }
-} while (month.month() == thisMonth);
-month.subtract(1, 'weeks');
-%>
+    weekLinks.push('[[' + weekCursor.format('YYYY-[W]ww|[Week] w') + ']]');
+    weekCursor.add(1, 'weeks');
+} while (weekCursor.month() === thisMonth);
+tR += weekLinks.join(' - ') + '\n';
+tR += '\n---\n\n';
 
----
-
-```dataview
+// Dataview blocks (static text, not JS output)
+tR += `\`\`\`dataview
 TABLE aliases
 FROM "Journal"
 WHERE aliases != null
 AND file.day.year = number(substring(this.file.name, 0, 4))
 AND dateformat(date(file.name), "yyyy-MM") = replace(this.file.name, "M", "")
 SORT file.day
-```
+\`\`\`
 
 ---
 
-```dataview
+\`\`\`dataview
 TABLE WITHOUT ID file.day.weekyear AS Week, learning
 FROM "Journal/Daily"
 WHERE learning != null
 AND file.day.year = number(substring(this.file.name, 0, 4))
 AND dateformat(date(file.name), "yyyy-MM") = replace(this.file.name, "M", "")
 SORT file.day
-```
+\`\`\`
 
-```dataview
+\`\`\`dataview
 TABLE WITHOUT ID file.day.weekyear AS Week, highlight
 FROM "Journal/Daily"
 WHERE highlight != null
 AND file.day.year = number(substring(this.file.name, 0, 4))
 AND dateformat(date(file.name), "yyyy-MM") = replace(this.file.name, "M", "")
 SORT file.day
-```
+\`\`\`
 
 ---
+
 ## Goals for this month:
 1. 
 2. 
-3. 
+
+---
+
+## Summary
+
+> Insert monthly summary here
+
+## Weeks
+`;
+
+let startOfMonth = month.clone().startOf("month").startOf("week");
+let endOfMonth = month.clone().endOf("month").endOf("week");
+let cursor = startOfMonth.clone();
+
+while (cursor.isSameOrBefore(endOfMonth)) {
+    const weekName = cursor.format("[Week] ww");
+    const weekFile = cursor.format("YYYY-[W]ww");
+    tR += `### ${weekName}\n![[${weekFile}#Summary]]\n\n`;
+    cursor.add(1, "week");
+}
+
+tR; // RETURN final content
+%>

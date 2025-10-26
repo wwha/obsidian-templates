@@ -62,6 +62,11 @@ for (let day = 0; day < 7; day++) {
 2. 
 3. 
 
+---
+
+## Summary
+1.
+2.
 
 ## What is worth remembering about this week?
 

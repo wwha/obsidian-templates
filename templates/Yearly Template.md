@@ -1,50 +1,70 @@
 <%*
+tR = ""; // Initialize output buffer
+
+// Move the file to correct folder
 await tp.file.move(`Journal/Yearly/${tp.file.title}`);
 
-let year = moment(tp.file.title);
+let year = moment(tp.file.title, "YYYY");
 
 // # 2023
-tR += '# ' + year.format('YYYY') + '\n\n\n';
+tR += '# ' + year.format('YYYY') + '\n\n';
 
 // ❮ 2022 | 2023 | 2024 ❯
-tR += '❮ [[' + year.subtract(1, 'years').format('YYYY') + ']]';
-tR += ' | ' + year.add(1, 'years').format('YYYY') + ' | ';
-tR += '[[' + year.add(1, 'years').format('YYYY') + ']] ❯';
-year.subtract(1, 'years');
-tR += '\n';
+tR += '❮ [[' + year.clone().subtract(1, 'years').format('YYYY') + ']]';
+tR += ' | ' + year.format('YYYY') + ' | ';
+tR += '[[' + year.clone().add(1, 'years').format('YYYY') + ']] ❯\n\n';
 
-// Q1 - Q2 - Q3 - Q4
-tR += '[[' + year.format('YYYY-[Q]Q|[Q]Q') + ']] - ';
-tR += '[[' + year.add(1, 'quarters').format('YYYY-[Q]Q|[Q]Q') + ']] - ';
-tR += '[[' + year.add(1, 'quarters').format('YYYY-[Q]Q|[Q]Q') + ']] - ';
-tR += '[[' + year.add(1, 'quarters').format('YYYY-[Q]Q|[Q]Q') + ']]' + '\n';
+// Q1 - Q2 - Q3 - Q4 navigation
+let q = year.clone().startOf('year');
+let quarterLinks = [];
+for (let i = 1; i <= 4; i++) {
+    quarterLinks.push('[[' + q.format('YYYY-[Q]Q|[Q]Q') + ']]');
+    q.add(1, 'quarter');
+}
+tR += quarterLinks.join(' - ') + '\n\n';
 
-tR += '[[' + year.format('YYYY') + '-' + '01|Jan]]' + ' - ';
-tR += '[[' + year.format('YYYY') + '-' + '02|Feb]]' + ' - ';
-tR += '[[' + year.format('YYYY') + '-' + '03|March]]' + ' - ';
-tR += '[[' + year.format('YYYY') + '-' + '04|Apr]]' + ' - ';
-tR += '[[' + year.format('YYYY') + '-' + '05|May]]' + ' - ';
-tR += '[[' + year.format('YYYY') + '-' + '06|Jun]]' + ' - ';
-tR += '[[' + year.format('YYYY') + '-' + '07|Jul]]' + ' - ';
-tR += '[[' + year.format('YYYY') + '-' + '08|Aug]]' + ' - ';
-tR += '[[' + year.format('YYYY') + '-' + '09|Sep]]' + ' - ';
-tR += '[[' + year.format('YYYY') + '-' + '10|Oct]]' + ' - ';
-tR += '[[' + year.format('YYYY') + '-' + '11|Nov]]' + ' - ';
-tR += '[[' + year.format('YYYY') + '-' + '12|Dec]]';
-%>
+// Month navigation (Jan–Dec)
+const monthLinks = Array.from({ length: 12 }, (_, i) =>
+    '[[' + year.format('YYYY') + '-' + String(i + 1).padStart(2, '0') + '|'
+    + moment().month(i).format('MMM') + ']]'
+);
+tR += monthLinks.join(' - ') + '\n\n';
 
-```dataview
+tR += '---\n\n';
+
+// Dataview sections
+tR += `\`\`\`dataview
 TABLE aliases
 FROM "Journal/Weekly"
 WHERE aliases != null
-where length(aliases) > 1
-where file.day.year = 2023
-```
+AND length(aliases) > 1
+AND file.day.year = number(${year.format('YYYY')})
+\`\`\`
 
-```dataview
+\`\`\`dataview
 TABLE aliases
 FROM "Journal/Daily"
 WHERE aliases != null
-where length(aliases) > 1
-where file.day.year = 2023
-```
+AND length(aliases) > 1
+AND file.day.year = number(${year.format('YYYY')})
+\`\`\`
+
+---
+
+## Summary
+
+> Insert yearly summary here
+
+## Quarters
+`;
+
+let cursor = year.clone().startOf("year");
+while (cursor.isSameOrBefore(year.clone().endOf("year"))) {
+    const quarterName = cursor.format("[Q]Q");
+    const quarterFile = cursor.format("YYYY-[Q]Q");
+    tR += `### ${quarterName}\n![[${quarterFile}#Summary]]\n\n`;
+    cursor.add(1, "quarter");
+}
+
+tR; // Return final output
+%>
