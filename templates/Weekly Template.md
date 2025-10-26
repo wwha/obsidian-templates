@@ -68,19 +68,38 @@ for (let day = 0; day < 7; day++) {
 1.
 2.
 
-## What is worth remembering about this week?
+## Task
 
+```dataviewjs
+// --- CONFIG ---
+const weekName = "<% tp.file.title %>"; // Templater injects the file title here
+const folder = "Journal/Daily"; // path to your daily notes
 
-## What did I accomplish this week?
+// --- DETERMINE WEEK RANGE ---
+let weekMoment = moment(weekName, "YYYY-[W]ww");
+if (!weekMoment.isValid()) { // Fallback for when not in a template
+    weekMoment = moment(this.current().file.name, "YYYY-[W]ww");
+}
+const start = dv.date(weekMoment.clone().startOf("isoWeek").format("YYYY-MM-DD"));
+const end = dv.date(weekMoment.clone().endOf("isoWeek").format("YYYY-MM-DD"));
 
+// --- LOAD ALL TASKS FROM THIS WEEK ---
+const pages = dv.pages(`"${folder}"`)
+    .where(p => p.file && p.file.day && p.file.day >= start && p.file.day <= end);
+const tasks = pages.file.tasks;
 
-## What could I have done better this week?
+// --- SAFE OUTPUT ---
+if (!tasks || tasks.length === 0) {
+    dv.paragraph("*(No tasks found for this week)*");
+} else {
+    dv.header(3, "✅ Completed This Week");
+    dv.taskList(tasks.filter(t => t.completed && t.completion && t.completion <= end));
 
+    dv.header(3, "🆕 Created This Week");
+    dv.taskList(tasks.filter(t => !t.completed && t.created && t.created >= start));
 
-## What am I grateful for this week, and what am I thinking of?
+    dv.header(3, "⏳ Still Uncompleted");
+    dv.taskList(tasks.filter(t => !t.completed && (!t.created || t.created < start)));
+}
 
-
-
-
-
-
+```

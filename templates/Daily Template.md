@@ -126,6 +126,9 @@ Test
 
 ![[Journal/Weekly/<%moment(tp.file.title).format("gggg-[W]WW")%>#Goals for this week:]]
 
+## Tasks
+- [ ] 
+
 ## What am I grateful for?
 1. Gratitude:: 
 
